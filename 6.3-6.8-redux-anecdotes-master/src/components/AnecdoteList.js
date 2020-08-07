@@ -6,9 +6,12 @@ import {
 	removeNotification,
 } from "./../reducers/notificationReducer";
 const AnecdoteList = () => {
-	const anecdotes = useSelector((state) => state.anecdote).sort(
-		(a, b) => b.votes - a.votes
-	);
+	const anecdotes = useSelector(({ anecdote, filter }) => {
+		const re = new RegExp(filter, "i");
+		const finalAnecdote =
+			filter === null ? anecdote : anecdote.filter((a) => a.content.match(re));
+		return finalAnecdote.sort((a, b) => b.votes - a.votes);
+	});
 	const dispatch = useDispatch();
 	const vote = ({ id, content }) => {
 		dispatch(addVote(id));
