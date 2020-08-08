@@ -61,6 +61,14 @@ export const initializeAnecdote = () => {
 	};
 };
 
-export const addVote = (id) => ({ type: "VOTE", payload: { id } });
+export const addVote = (anecdote) => {
+	return async (dispatch) => {
+		const newAnecdote = await anecdoteService.doVote(anecdote);
+		dispatch({
+			type: "VOTE",
+			payload: { id: newAnecdote.id },
+		});
+	};
+};
 
 export default anecdoteReducer;
