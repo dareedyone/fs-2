@@ -1,17 +1,17 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, connect } from "react-redux";
 import { addVote } from "../reducers/anecdoteReducer";
 import {
 	removeNotification,
 	setNotification,
 } from "./../reducers/notificationReducer";
-const AnecdoteList = () => {
-	const anecdotes = useSelector(({ anecdote, filter }) => {
-		const re = new RegExp(filter, "i");
-		const finalAnecdote =
-			filter === null ? anecdote : anecdote.filter((a) => a.content.match(re));
-		return finalAnecdote.sort((a, b) => b.votes - a.votes);
-	});
+const AnecdoteList = (props) => {
+	// const anecdotes = useSelector(({ anecdote, filter }) => {
+	// 	const re = new RegExp(filter, "i");
+	// 	const finalAnecdote =
+	// 		filter === null ? anecdote : anecdote.filter((a) => a.content.match(re));
+	// 	return finalAnecdote.sort((a, b) => b.votes - a.votes);
+	// });
 	const dispatch = useDispatch();
 	const vote = (anecdote) => {
 		dispatch(addVote(anecdote));
@@ -24,7 +24,7 @@ const AnecdoteList = () => {
 
 	return (
 		<div>
-			{anecdotes.map((anecdote) => (
+			{props.anecdotes.map((anecdote) => (
 				<Anecdote
 					key={anecdote.id}
 					anecdote={anecdote}
@@ -46,5 +46,14 @@ const Anecdote = ({ anecdote, handleVote }) => {
 		</div>
 	);
 };
+const mapStateToProps = ({ anecdote, filter }) => {
+	const re = new RegExp(filter, "i");
+	const finalAnecdote =
+		filter === null ? anecdote : anecdote.filter((a) => a.content.match(re));
+	console.log(finalAnecdote);
+	return {
+		anecdotes: finalAnecdote.sort((a, b) => b.votes - a.votes),
+	};
+};
 
-export default AnecdoteList;
+export default connect(mapStateToProps)(AnecdoteList);
