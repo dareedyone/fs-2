@@ -41,10 +41,15 @@ const anecdoteReducer = (state = [], action) => {
 	}
 };
 
-export const createAnecdote = (val) => ({
-	type: "NEW_ANECDOTE",
-	payload: val,
-});
+export const createAnecdote = (val) => {
+	return async (dispatch) => {
+		const newNote = await anecdoteService.createNew(val);
+		dispatch({
+			type: "NEW_ANECDOTE",
+			payload: newNote,
+		});
+	};
+};
 
 export const initializeAnecdote = () => {
 	return async (dispatch) => {
