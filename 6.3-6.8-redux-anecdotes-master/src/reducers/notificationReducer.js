@@ -1,4 +1,5 @@
 import notificationService from "../services/notification";
+let timer;
 const notificationReducer = (state = null, action) => {
 	switch (action.type) {
 		case "SET_MESSAGE":
@@ -18,10 +19,12 @@ export const createNotification = (message) => {
 };
 
 export const setNotification = (message, sec = 5) => {
+	console.log(timer);
+	clearTimeout(timer);
 	return async (dispatch) => {
 		message = await notificationService.setMessage({ message });
 		dispatch({ type: "SET_MESSAGE", payload: message.message });
-		setTimeout(async () => {
+		timer = setTimeout(async () => {
 			message = await notificationService.setMessage({ message: null });
 			dispatch({ type: "SET_NULL" });
 		}, 1000 * sec);
